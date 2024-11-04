@@ -1,0 +1,53 @@
+import tkinter as tk
+from tkinter import ttk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class EmotionGraphApp:
+    def _init_(self, master):
+        self.master = master
+        self.master.title("Gráfico de Emoções")
+
+        # Criar uma figura Matplotlib
+        self.fig = Figure(figsize=(8, 6), dpi=100)
+        self.ax = self.fig.add_subplot(111)
+
+        # Dados fictícios de emoções
+        self.emotions = ['Felicidade', 'Tristeza', 'Raiva', 'Medo', 'Surpresa']
+        self.intensity = [80, 20, 40, 60, 50]  # Intensidade das emoções
+
+        # Criar o gráfico de barras
+        self.ax.bar(self.emotions, self.intensity, color=['#FFD700', '#1E90FF', '#FF4500', '#8B0000', '#32CD32'])
+        self.ax.set_title('Intensidade das Emoções', fontsize=16)
+        self.ax.set_xlabel('Emoções', fontsize=14)
+        self.ax.set_ylabel('Intensidade', fontsize=14)
+
+        # Adicionar o gráfico à interface Tkinter
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.master)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+        # Botão para atualizar o gráfico
+        self.button_update = ttk.Button(master, text="Atualizar Emoções", command=self.atualizar_grafico)
+        self.button_update.pack(side=tk.BOTTOM)
+
+    def atualizar_grafico(self):
+        # Atualizando os dados fictícios
+        import numpy as np
+        self.intensity = np.random.randint(0, 100, size=len(self.emotions))
+
+        # Limpando o gráfico anterior
+        self.ax.clear()
+        # Criar novo gráfico de barras
+        self.ax.bar(self.emotions, self.intensity, color=['#FFD700', '#1E90FF', '#FF4500', '#8B0000', '#32CD32'])
+        self.ax.set_title('Intensidade das Emoções', fontsize=16)
+        self.ax.set_xlabel('Emoções', fontsize=14)
+        self.ax.set_ylabel('Intensidade', fontsize=14)
+
+        # Atualizando o canvas
+        self.canvas.draw()
+
+if _name_ == "_main_":
+    root = tk.Tk()
+    app = EmotionGraphApp(root)
+    root.mainloop()
